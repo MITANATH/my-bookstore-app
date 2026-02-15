@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { bookService } from '../services/bookService';
 const BookList = ({ user, onBookSelect, onLogout }) => {
-const [books, setbooks] = useState([]);
+const [books, setBooks] = useState([]);
 const [loading, setLoading] = useState(true);
 const [showAddForm, setShowAddForm] = useState(false);
 const [deletingBook, setDeletingBook] = useState(null);
@@ -12,11 +12,10 @@ Genre: '',
 Author: '',
 datePublished: ''
 });
-useEffect(() => {
-loadUserBooks();
-}, [user]);
+
 const loadUserBooks = async () => {
 if (!user) return;
+console.log("loading user books...");
 setLoading(true);
 const result = await bookService.getUserbooks(user.uid);
 if (result.success) {
@@ -24,9 +23,12 @@ setBooks(result.data);
 }
 setLoading(false);
 };
+useEffect(() => {
+loadUserBooks();
+}, [loadUserBooks]);
 const handleAddBook = async (e) => {
 e.preventDefault();
-// Validate required fields
+// Veralidate required fields
 if (!newBook.name.trim() || !newBook.datePublished) {
 alert('Please fill in book name and published date');
 return;
@@ -39,14 +41,14 @@ Genre: newBook.genre.trim() || 'Unknown',
 datePublished: new Date(newBook.datePublished)
 });
 if (result.success) {
-setBooks([...Books, result.data]);
+setBooks([...BookList, result.data]);
 setNewBook({ name: '', genre: '', datePublished: '' });
 setShowAddForm(false);
 } else {
 alert('Failed to add book: ' + result.error);
 }
 };
-const handleDeleteBook = async (BookToDelete, event) => {
+const handleDeleteBook = async (bookToDelete, event) => {
 // Prevent card click event from firing
 event.stopPropagation();
 setDeletingBook(bookToDelete);
@@ -54,7 +56,7 @@ setShowDeleteConfirm(true);
 };
 const confirmDeleteBook = async () => {
 if (!deletingBook) return;
-const result = await BookService.removeBook(user.uid, deletingBook.id);
+const result = await bookService.removeBook(user.uid, deletingBook.id);
 if (result.success) {
 // Remove book from local state
 setBooks(books.filter(book => book.id !== deletingBook.id));
@@ -96,14 +98,14 @@ Logout
 type="text"
 placeholder="Book name *"
 value={newBook.name}
-onChange={(e) => setNewPlant({...newPlant, name: e.target.value})}
+onChange={(e) => setNewBook({...newBook, name: e.target.value})}
 required
 />
 <input
 type="text"
 placeholder="Genre (optional)"
 value={newBook.genre}
-onChange={(e) => setNewPlant({...newBook, genre: e.target.value})}
+onChange={(e) => setNewBook({...newBook, genre: e.target.value})}
 />
 </div>
 <div className="form-row">

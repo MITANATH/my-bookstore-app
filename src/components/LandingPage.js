@@ -8,7 +8,7 @@ return (
 <h1>📚 My bookstore App</h1>
 <p>Track and maintain your books with ease</p>
 </header>
-<main className="landing-content">
+
 {!showSignup ? (
 <div className="welcome-section">
 <h2>Welcome to Your Digital Library</h2>
@@ -35,7 +35,7 @@ onSuccess={onUserAuthenticated}
 onBack={() => setShowSignup(false)}
 />
 )}
-</main>
+
 </div>
 );
 
